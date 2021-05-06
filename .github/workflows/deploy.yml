@@ -29,11 +29,22 @@ jobs:
       - name: Run Jekyll to generate website files
         run: bundle exec jekyll build --trace
 
+#      - name: Install SSH key
+#        uses: shimataro/ssh-key-action@v2
+#        with:
+#          key: ${{ secrets.ISCLAB_SSH_PRIVATE_KEY }}
+#          known_hosts: ${{ secrets.ISCLAB_KNOWN_HOSTS }}
+#ISCLAB_SSH_PASSPHRASE
+
       - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+        uses: appleboy/ssh-action@master
         with:
+          host: isclab.dcc.uchile.cl
+          username: isclab
+          port: 122
           key: ${{ secrets.ISCLAB_SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.ISCLAB_KNOWN_HOSTS }}
+          passphrase: ${{ secrets.ISCLAB_SSH_PASSPHRASE }}
+          script: whoami
 
       - name: Deploy via SSH
         run: ./bin/deploy
